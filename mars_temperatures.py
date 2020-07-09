@@ -1,5 +1,7 @@
 import json
 import urllib.request
+import numpy as np
+import matplotlib.pyplot as plt
 
 with urllib.request.urlopen("https://api.nasa.gov/insight_weather/?api_key=DEMO_KEY&feedtype=json&ver=1.0") as response:
     source = response.read()
@@ -28,3 +30,17 @@ for sol in data['sol_keys']:
 print('SOL:\tAvg-T:\tMin-T:\tMax-T:\tFrom:\t\tTo:')
 for sol in data['sol_keys']:
     print('{}\t\t{}\t{}\t{}\t{}\t{}'.format(sol, round(data[sol]['AT']['av'], 2), round(data[sol]['AT']['mn'], 2), round(data[sol]['AT']['mx'], 2), data[sol]['First_UTC'][0:10], data[sol]['Last_UTC'][0:10]))
+
+date = []
+avgtemp = []
+
+for sol in data['sol_keys']:
+    date.append(data[sol]['First_UTC'][5:10])
+    avgtemp.append(data[sol]['AT']['av'])
+
+plt.plot(date, avgtemp, 'ro-')
+plt.title("Recent Average Temperature on Mars")
+plt.xlabel('Date (month-day)')
+plt.ylabel('Avg-Temp')
+
+plt.show()
